@@ -18,12 +18,12 @@ func (poll *UrPoll) CanPull() bool {
 }
 
 func (poll *UrPoll) Pull() (byte, error) {
-	defer func() {
-		poll.pulled += 1
-	}()
 	if !poll.CanPull() {
 		return 0, errors.New("Unable to pull fom UrPoll")
 	}
+	defer func() {
+		poll.pulled += 1
+	}()
 	strValue := poll.source
 	srcLength := utf8.RuneCountInString(strValue)
 	return strValue[rand.Intn(int(srcLength-1))], nil
