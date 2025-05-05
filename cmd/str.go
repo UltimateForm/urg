@@ -29,18 +29,21 @@ func stringRun(cmd *cobra.Command, args []string) {
 	// log.Printf("Running with data %+v", map[string]uint8{"uppers": includeUppers, "lowers": includeLowers, "numbers": includeNum, "specials": includeSpecial})
 	genLength := min + uint8(rand.Int31n((int32(max)+1)-int32(min)))
 	var dataset []*internal.UrPoll
-
-	if includeUppers > 0 {
-		dataset = append(dataset, internal.NewUrPoll(uppers, includeUppers))
+	charsetMap := map[string]uint8{
+		uppers:            includeUppers,
+		lowers:            includeLowers,
+		numbers:           includeNum,
+		specialCharacters: includeSpecial,
 	}
-	if includeNum > 0 {
-		dataset = append(dataset, internal.NewUrPoll(numbers, includeNum))
-	}
-	if includeLowers > 0 {
-		dataset = append(dataset, internal.NewUrPoll(lowers, includeLowers))
-	}
-	if includeSpecial > 0 {
-		dataset = append(dataset, internal.NewUrPoll(specialCharacters, includeSpecial))
+	for charSet, charInclusionCount := range charsetMap {
+		if charInclusionCount == 0 {
+			continue
+		}
+		poll, err := internal.NewUrPoll(charSet, charInclusionCount)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		dataset = append(dataset, poll)
 	}
 
 	generatedStr, err := internal.GenerateRandomString(dataset, genLength)

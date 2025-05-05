@@ -29,6 +29,9 @@ func (poll *UrPoll) Pull() (byte, error) {
 	return strValue[rand.Intn(int(srcLength-1))], nil
 }
 
-func NewUrPoll(source string, maxPulls uint8) *UrPoll {
-	return &UrPoll{source: source, MaxPulls: maxPulls}
+func NewUrPoll(source string, maxPulls uint8) (*UrPoll, error) {
+	if source == "" {
+		return nil, errors.New("source string cannot be empty")
+	}
+	return &UrPoll{source: source, MaxPulls: maxPulls}, nil
 }
