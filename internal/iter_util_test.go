@@ -10,7 +10,7 @@ func TestFilterList(t *testing.T) {
 	for i := range cap(numbers) {
 		numbers[i] = uint8(i) + 1
 	}
-	filteredNumbers, newCount := FilterList(&numbers, func(n uint8) bool {
+	filteredNumbers, newCount := FilterList(numbers, func(n uint8) bool {
 		return n%2 > 0
 	})
 
@@ -25,7 +25,7 @@ func TestFilterList(t *testing.T) {
 
 func TestFilterListWithEmptySlice(t *testing.T) {
 	strings := []string{}
-	_, newCount := FilterList(&strings, func(_ string) bool { return true })
+	_, newCount := FilterList(strings, func(_ string) bool { return true })
 	if newCount != 0 {
 		t.Errorf("Expected new count to be 0 but got %v", newCount)
 	}

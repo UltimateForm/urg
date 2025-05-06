@@ -11,7 +11,7 @@ func GenerateRandomString(dataset []*UrPoll, genLength uint8) (string, error) {
 	for range genLength {
 		var targetPoll *UrPoll
 		if len(dataset) > 1 {
-			elligiblePolls, newCount := FilterList(&dataset, func(poll *UrPoll) bool {
+			elligiblePolls, newCount := FilterList(dataset, func(poll *UrPoll) bool {
 				return poll.CanPull()
 			})
 			targetPoll = elligiblePolls[rand.Intn(newCount)]
