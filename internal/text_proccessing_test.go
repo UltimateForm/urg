@@ -7,11 +7,11 @@ import (
 
 func TestGenerateRandomString(t *testing.T) {
 	polls := []*UrPoll{}
-	strings := [3]string{"", "asdfghjkl", "zxcvbnm"}
+	strings := [3]string{"qwertyuiop", "asdfghjkl", "zxcvbnm"}
 	for _, i := range strings {
 		poll, _ := NewUrPoll(i, 10)
 		if poll == nil {
-			t.Fatalf("Test setup failed, poll creation with %v failed", i)
+			t.Fatalf("Test setup failed, poll creation with '%v' failed", i)
 		}
 		polls = append(polls, poll)
 	}
