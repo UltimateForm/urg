@@ -2,15 +2,15 @@ package internal
 
 import (
 	"errors"
-	"unicode/utf8"
-
 	"math/rand"
+	"unicode/utf8"
 )
 
 type UrPoll struct {
-	source   string
-	MaxPulls uint8
-	pulled   uint8
+	source     string
+	MaxPulls   uint8
+	pulled     uint8
+	consumable bool
 }
 
 func (poll *UrPoll) CanPull() bool {
@@ -26,12 +26,26 @@ func (poll *UrPoll) Pull() (byte, error) {
 	}()
 	strValue := poll.source
 	srcLength := utf8.RuneCountInString(strValue)
-	return strValue[rand.Intn(int(srcLength-1))], nil
+	targetIndex := rand.Intn(int(srcLength))
+	targetByte := strValue[targetIndex]
+	if poll.consumable {
+		poll.source = poll.source[:targetIndex] + poll.source[targetIndex+1:]
+	}
+	return targetByte, nil
 }
 
-func NewUrPoll(source string, maxPulls uint8) (*UrPoll, error) {
+func newUrPoll(source string, maxPulls uint8, consumable bool) (*UrPoll, error) {
 	if source == "" {
 		return nil, errors.New("source string cannot be empty")
 	}
-	return &UrPoll{source: source, MaxPulls: maxPulls}, nil
+	return &UrPoll{source: source, MaxPulls: maxPulls, consumable: consumable}, nil
+}
+
+func NewUrPoll(source string, maxPulls uint8) (*UrPoll, error) {
+	return newUrPoll(source, maxPulls, false)
+}
+
+func NewConsumableUrPoll(source string, maxPulls uint8) (*UrPoll, error) {
+	return newUrPoll(source, maxPulls, true)
+
 }

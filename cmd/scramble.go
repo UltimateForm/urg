@@ -15,7 +15,7 @@ import (
 func scrambleRun(cmd *cobra.Command, args []string) {
 	fullStr := strings.Join(args, " ")
 	strLen := uint8(utf8.RuneCountInString(fullStr))
-	poll, err := internal.NewUrPoll(fullStr, strLen)
+	poll, err := internal.NewConsumableUrPoll(fullStr, strLen)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

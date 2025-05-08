@@ -50,7 +50,7 @@ func stringRun(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	fmt.Println(generatedStr)
+	fmt.Print(generatedStr)
 }
 
 var stringCmd = &cobra.Command{
