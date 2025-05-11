@@ -40,3 +40,31 @@ func TestReturnsErrorIfAttemptedCreationWithEmptyString(t *testing.T) {
 		t.Error("Expected error to be defined but instead got nil")
 	}
 }
+
+func TestKeepOriginalSourceWhenNotConsumable(t *testing.T) {
+	sourceset := "qwertyuiop"
+	poll, _ := NewUrPoll(sourceset, 10)
+	for range 10 {
+		poll.Pull()
+	}
+	if poll.CanPull() {
+		t.Error("Expected poll.CanPull() to return false but instead returns true")
+	}
+	if poll.source != sourceset {
+		t.Errorf("Expected poll.source to equal '%v', but instead it is '%v'", sourceset, poll.source)
+	}
+}
+
+func TestConsumablePollIsDepleted(t *testing.T) {
+	sourceset := "qwertyuiop"
+	poll, _ := NewConsumableUrPoll(sourceset, 10)
+	for range 10 {
+		poll.Pull()
+	}
+	if poll.CanPull() {
+		t.Error("Expected poll.CanPull() to return false but instead returns true")
+	}
+	if poll.source != "" {
+		t.Errorf("Expected poll.source to equal empty string, but instead it is '%v'", poll.source)
+	}
+}
